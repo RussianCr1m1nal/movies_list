@@ -17,9 +17,8 @@ class MoviesBloc {
     ]);
   }
 
-  void _changeStream(data) async {
+  void _changeStream(data) {
     _moviesStream.add(data);
     print(data.toString());
-    await Future.delayed(Duration(seconds: 2));
   }
 }
