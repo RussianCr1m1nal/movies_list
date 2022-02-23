@@ -1,14 +1,22 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
-class MoviesService {
+abstract class MoviesService {
+  Future<List<dynamic>> getMoviesFromPage(int page);
+}
+
+class MoviesServiceAPI extends MoviesService {
   final String _APIKey;
 
-  MoviesService(this._APIKey);
+  MoviesServiceAPI(this._APIKey);
 
-  Future<http.Response> getMovies(int page) async {
-    var url = Uri.https('api.themoviedb.org', '/3/discover/movie?sort_by=popularity.desc&page=${page.toString()}&api_key=$_APIKey');
+  @override
+  Future<List<dynamic>> getMoviesFromPage(int page) async {
+    var url = Uri.https('api.themoviedb.org', '/3/discover/movie',
+        {'api_key': _APIKey, 'sort_by' : 'popularity.desc', 'page' : page.toString()});
     final response = await http.get(url);
     
-    return response;
+    return jsonDecode(response.body)['results'];
   }
 }
