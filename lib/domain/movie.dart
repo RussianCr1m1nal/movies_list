@@ -11,12 +11,12 @@ class Movie {
 
   Movie.fromJson(Map<String, dynamic> movieData) {
     
-    _title = movieData['original_title'];
-    _overview = movieData['overview'];
-    _genres = movieData['genre_ids'];
-    _releaseDate = movieData['release_date'];
-    _posterPath = movieData['poster_path'];
-    _voteAverage = movieData['vote_average'];
+    _title = movieData['original_title'] ?? '';
+    _overview = movieData['overview'] ?? '';
+    _genres = movieData['genre_ids'] ?? [];
+    _releaseDate = movieData['release_date'] ?? '';
+    _posterPath = movieData['poster_path'] ?? '';
+    _voteAverage = double.tryParse(['vote_average'].toString()) ?? 0.0;
   }
 
   String get title => _title;
