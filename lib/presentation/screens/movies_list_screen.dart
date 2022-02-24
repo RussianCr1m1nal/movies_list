@@ -3,11 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:movies_list/domain/movie.dart';
 import 'package:movies_list/domain/usecases/get_movies_from_page.dart';
 import 'package:movies_list/presentation/bloc/movies_bloc.dart';
+import 'package:movies_list/presentation/widgets/movie_list_tile.dart';
 import 'package:provider/provider.dart';
 
-class MoviesListView extends StatelessWidget {
-  MoviesListView({Key? key}) : super(key: key);
-  
+class MoviesListScreeen extends StatelessWidget {
+  MoviesListScreeen({Key? key}) : super(key: key);
+
   int currentPage = 1;
 
   @override
@@ -15,8 +16,7 @@ class MoviesListView extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<MoviesBloc>(
-          create: (_) => MoviesBloc(
-              getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>()),
+          create: (_) => MoviesBloc(getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>()),
           dispose: (context, moviesBloc) {
             moviesBloc.dispose();
           },
@@ -30,24 +30,22 @@ class MoviesListView extends StatelessWidget {
                 stream: _moviesBloc.stream,
                 builder: ((context, snapshot) {
 
-                  List<Movie> movies = snapshot.data ?? []; 
+                  List<Movie> movies = snapshot.data ?? [];
                   ScrollController _scrollController = ScrollController();
 
                   return NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification notification) {                                            
-
+                    onNotification: (ScrollNotification notification) {
                       if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                        _moviesBloc.loadMovies.add(++currentPage);
+                        _moviesBloc.loadMovies(++currentPage);
                       }
 
                       return false;
                     },
                     child: ListView.builder(
                       itemCount: movies.length,
+                      itemExtent: MediaQuery.of(context).size.height / 2,                      
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(movies[index].title),
-                        );
+                        return MovieCard(movie: movies[index]);                       
                       },
                       controller: _scrollController,
                     ),

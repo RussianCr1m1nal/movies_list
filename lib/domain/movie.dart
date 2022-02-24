@@ -1,28 +1,24 @@
-
 class Movie {
-  late final String _title;
-  late final String _overview;
-  late final String _releaseDate;
-  late final List<dynamic> _genres;
-  late final String _posterPath;
-  late final double _voteAverage;
+  final String title;
+  final String overview;
+  final String releaseDate;
+  final List<dynamic> genres;
+  final String posterPath;
+  final double voteAverage;
 
-  Movie(this._title, this._overview, this._releaseDate, this._genres, this._posterPath, this._voteAverage);
+  Movie(
+      {required this.title,
+      required this.overview,
+      required this.releaseDate,
+      required this.genres,
+      required this.posterPath,
+      required this.voteAverage});
 
-  Movie.fromJson(Map<String, dynamic> movieData) {
-    
-    _title = movieData['original_title'] ?? '';
-    _overview = movieData['overview'] ?? '';
-    _genres = movieData['genre_ids'] ?? [];
-    _releaseDate = movieData['release_date'] ?? '';
-    _posterPath = movieData['poster_path'] ?? '';
-    _voteAverage = double.tryParse(['vote_average'].toString()) ?? 0.0;
-  }
-
-  String get title => _title;
-  String get overview => _overview;
-  String get releaseDate => _releaseDate;
-  List<dynamic> get genres => _genres;
-  String get posterPath => _posterPath;
-  double get voteAverage => _voteAverage;
+  Movie.fromJson(Map<String, dynamic> movieData)
+      : title = movieData['original_title'] ?? '',
+        overview = movieData['overview'] ?? '',
+        genres = movieData['genre_ids'] ?? [],
+        releaseDate = movieData['release_date'] ?? '',
+        posterPath = movieData['poster_path'] ?? '',
+        voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0;
 }

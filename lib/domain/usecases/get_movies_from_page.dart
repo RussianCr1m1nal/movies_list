@@ -1,6 +1,5 @@
-
-import 'package:movies_list/data/repositories/movies_repository.dart';
 import 'package:movies_list/domain/movie.dart';
+import 'package:movies_list/domain/repositories/movies_repository.dart';
 
 class GetMoviesFromPageUseCase {
   final MoviesRepository repository;
@@ -8,6 +7,10 @@ class GetMoviesFromPageUseCase {
   GetMoviesFromPageUseCase({required this.repository});
 
   Future<List<Movie>> call(int page) async {
-    return await repository.getMoviesFromPage(page);
+    try {
+      return await repository.getMoviesFromPage(page);
+    } catch(exception) {
+      return [];
+    }
   }
 }
