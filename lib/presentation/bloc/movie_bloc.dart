@@ -1,0 +1,5 @@
+
+class MovieBloc {
+
+  void dispose() {}
+}

@@ -3,10 +3,13 @@ import 'package:get_it/get_it.dart';
 import 'package:movies_list/domain/movie.dart';
 import 'package:movies_list/domain/usecases/get_movies_from_page.dart';
 import 'package:movies_list/presentation/bloc/movies_bloc.dart';
-import 'package:movies_list/presentation/widgets/movie_list_tile.dart';
+import 'package:movies_list/presentation/widgets/movie_card.dart';
 import 'package:provider/provider.dart';
 
 class MoviesListScreeen extends StatelessWidget {
+
+  static const String routeName = '/';
+
   MoviesListScreeen({Key? key}) : super(key: key);
 
   int currentPage = 1;
@@ -42,8 +45,7 @@ class MoviesListScreeen extends StatelessWidget {
                       return false;
                     },
                     child: ListView.builder(
-                      itemCount: movies.length,
-                      itemExtent: MediaQuery.of(context).size.height / 2,                      
+                      itemCount: movies.length,                                            
                       itemBuilder: (context, index) {
                         return MovieCard(movie: movies[index]);                       
                       },

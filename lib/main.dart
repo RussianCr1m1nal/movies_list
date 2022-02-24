@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_list/locator.dart';
-import 'package:movies_list/presentation/screens/movies_list_screen.dart';
+import 'package:movies_list/presentation/routes/route_generator.dart';
 
 void main() {
   setup();
@@ -14,7 +14,8 @@ class MoviesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Movies list',
-      home: MoviesListScreeen(),
+      theme: ThemeData.dark(),
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
