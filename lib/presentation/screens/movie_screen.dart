@@ -1,8 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:movies_list/domain/movie.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movies_list/domain/entities/movie.dart';
 import 'package:movies_list/presentation/bloc/movie_bloc.dart';
+import 'package:movies_list/presentation/widgets/movie_info.dart';
 import 'package:provider/provider.dart';
 
 class MovieScreen extends StatelessWidget {
@@ -49,30 +49,25 @@ class MovieScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  movie.title,
-                                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                              RatingBar(
+                                ignoreGestures: true,
+                                initialRating: movie.voteAverage / 2,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                ratingWidget: RatingWidget(
+                                  full: const Icon(Icons.star),
+                                  half: const Icon(Icons.star_half_outlined),
+                                  empty: const Icon(Icons.star_border),
                                 ),
+                                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                onRatingUpdate: (rating) {},
                               ),
-                              Text(
-                                movie.overview,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.justify,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  'Release',
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Text(
-                                movie.releaseDate,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.justify,
-                              )
+                              MovieInfo(title: movie.title, subtitle: movie.overview),
+                              MovieInfo(title: 'Release', subtitle: movie.releaseDate.toString().substring(0, 10)),
+                              MovieInfo(
+                                  title: 'Genres', subtitle: movie.genres.toString().replaceAll(RegExp(r"[\[\]]"), '')),
+                              MovieInfo(title: 'Runtime', subtitle: movie.runtime.toString() + ' min'),                              
                             ],
                           ),
                         ),

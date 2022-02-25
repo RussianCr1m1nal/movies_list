@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:movies_list/domain/movie.dart';
+import 'package:movies_list/domain/entities/movie.dart';
 import 'package:movies_list/domain/usecases/get_movies_from_page.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -14,7 +14,7 @@ class MoviesBloc {
     loadMovies(1);
   }
 
-  void loadMovies(int page) async {
+  Future<void> loadMovies(int page) async {
     _addToStream(await getMoviesFromPageUseCase(page));
   }
 

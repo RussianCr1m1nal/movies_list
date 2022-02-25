@@ -1,10 +1,11 @@
 class Movie {
   final String title;
   final String overview;
-  final String releaseDate;
-  final List<dynamic> genres;
+  final DateTime? releaseDate;
+  final List<String> genres;
   final String posterPath;
   final double voteAverage;
+  final int runtime;
 
   Movie(
       {required this.title,
@@ -12,13 +13,15 @@ class Movie {
       required this.releaseDate,
       required this.genres,
       required this.posterPath,
-      required this.voteAverage});
+      required this.voteAverage,
+      required this.runtime});
 
   Movie.fromJson(Map<String, dynamic> movieData)
       : title = movieData['original_title'] ?? '',
         overview = movieData['overview'] ?? '',
-        genres = movieData['genre_ids'] ?? [],
-        releaseDate = movieData['release_date'] ?? '',
+        genres = movieData['genres'] ?? [],
+        releaseDate = movieData['release_date'],
         posterPath = movieData['poster_path'] ?? '',
-        voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0;
+        voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0,
+        runtime = movieData['runtime'] ?? 0;
 }

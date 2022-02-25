@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies_list/domain/movie.dart';
+import 'package:movies_list/domain/entities/movie.dart';
 import 'package:movies_list/presentation/screens/movie_screen.dart';
 
 class MovieCard extends StatelessWidget {
@@ -33,11 +33,13 @@ class MovieCard extends StatelessWidget {
                       Text(movie.title,
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis),
-                      Text(movie.overview,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 4,
-                          textAlign: TextAlign.justify,),
+                      Text(
+                        movie.overview,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        textAlign: TextAlign.justify,
+                      ),
                     ],
                   ),
                 ),
@@ -46,7 +48,8 @@ class MovieCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(movie.releaseDate, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(movie.releaseDate.toString().substring(0, 10),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(
