@@ -23,13 +23,4 @@ class Movie {
       required this.runtime});
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
-
-  // Movie.fromJson(Map<String, dynamic> movieData)
-  //     : title = movieData['original_title'] ?? '',
-  //       overview = movieData['overview'] ?? '',
-  //       genres = movieData['genres'] ?? [],
-  //       releaseDate = movieData['release_date'],
-  //       posterPath = movieData['poster_path'] ?? '',
-  //       voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0,
-  //       runtime = movieData['runtime'] ?? 0;
 }
