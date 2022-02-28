@@ -9,30 +9,16 @@ import 'package:provider/provider.dart';
 class MoviesListScreeen extends StatelessWidget {
   static const String routeName = '/';
 
-  MoviesListScreeen({Key? key}) : super(key: key);
-
-  int currentPage = 1;
-  final ScrollController _scrollController = ScrollController();
+  const MoviesListScreeen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<MoviesBloc>(
-          create: (_) {
-            MoviesBloc moviesBloc = MoviesBloc(getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>());
-
-            _scrollController.addListener(() async {
-              if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-                await moviesBloc.loadMovies(++currentPage);
-              }
-            });
-
-            return moviesBloc;
-          },
+          create: (_) => MoviesBloc(getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>()),
           dispose: (context, moviesBloc) {
             moviesBloc.dispose();
-            _scrollController.dispose();
           },
         ),
       ],
@@ -50,7 +36,7 @@ class MoviesListScreeen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return MovieCard(movie: movies[index]);
                     },
-                    controller: _scrollController,
+                    controller: _moviesBloc.scrollController,
                   );
                 }),
               );

@@ -1,11 +1,7 @@
-import 'dart:async';
 import 'dart:convert';
 
+import 'package:movies_list/data/movies_data_source.dart';
 import 'package:http/http.dart' as http;
-
-abstract class MoviesDataSource {
-  Future<List<Map<String, dynamic>>> getMoviesFromPage(int page);
-}
 
 class MoviesDataSourceTMDB extends MoviesDataSource {
   final String _apiKey;
@@ -19,12 +15,11 @@ class MoviesDataSourceTMDB extends MoviesDataSource {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-
       List<Map<String, dynamic>> movies = [];
 
       for (Map<String, dynamic> movie in jsonDecode(response.body)['results']) {
         movies.add(await _getMovieById(movie['id']));
-      } 
+      }
 
       return movies;
     } else {
