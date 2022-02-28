@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies_list/domain/entities/movie.dart';
@@ -44,7 +45,7 @@ class MovieScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
-                                  image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(_movie.posterPath))),
+                                  image: DecorationImage(fit: BoxFit.cover, image: CachedNetworkImageProvider(_movie.posterPath))),
                             ),
                           ),
                           Expanded(
