@@ -28,7 +28,7 @@ class MovieScreen extends StatelessWidget {
             stream: movieBloc.stream,
             builder: ((context, snapshot) {
 
-              final _movie = snapshot.data ?? movie;
+              final _movie = snapshot.data ?? Movie(title: '', overview: '', releaseDate: DateTime.now(), genres: [], posterPath: '', voteAverage: 0.0, runtime: 0);
 
               return Scaffold(
                 appBar: AppBar(title: Text(_movie.title)),
