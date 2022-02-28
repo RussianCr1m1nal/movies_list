@@ -44,9 +44,7 @@ class MoviesDataSourceTMDB extends MoviesDataSource {
         case 'poster_path':
           return MapEntry(key, 'https://image.tmdb.org/t/p/original' + value);
         case 'genres':
-          return MapEntry(key, List<String>.from(value.map((genre) => genre['name'] as String).toList()));
-        case 'release_date':
-          return MapEntry(key, DateTime.tryParse(value));
+          return MapEntry(key, List<String>.from(value.map((genre) => genre['name'] as String).toList()));       
         default:
           return MapEntry(key, value);
       }

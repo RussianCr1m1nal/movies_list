@@ -1,3 +1,9 @@
+
+import 'package:json_annotation/json_annotation.dart';
+
+part 'movie.g.dart';
+
+@JsonSerializable()
 class Movie {
   final String title;
   final String overview;
@@ -16,12 +22,14 @@ class Movie {
       required this.voteAverage,
       required this.runtime});
 
-  Movie.fromJson(Map<String, dynamic> movieData)
-      : title = movieData['original_title'] ?? '',
-        overview = movieData['overview'] ?? '',
-        genres = movieData['genres'] ?? [],
-        releaseDate = movieData['release_date'],
-        posterPath = movieData['poster_path'] ?? '',
-        voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0,
-        runtime = movieData['runtime'] ?? 0;
+  factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
+
+  // Movie.fromJson(Map<String, dynamic> movieData)
+  //     : title = movieData['original_title'] ?? '',
+  //       overview = movieData['overview'] ?? '',
+  //       genres = movieData['genres'] ?? [],
+  //       releaseDate = movieData['release_date'],
+  //       posterPath = movieData['poster_path'] ?? '',
+  //       voteAverage = double.tryParse(movieData['vote_average'].toString()) ?? 0.0,
+  //       runtime = movieData['runtime'] ?? 0;
 }

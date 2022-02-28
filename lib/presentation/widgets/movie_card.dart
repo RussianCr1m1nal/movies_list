@@ -50,7 +50,7 @@ class MovieCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(movie.releaseDate.toString().substring(0, 10),
+                      Text(movie.releaseDate == null ? 'No release date' : movie.releaseDate.toString().substring(0, 10),
                           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                       RichText(
                           textAlign: TextAlign.center,
