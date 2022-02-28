@@ -25,7 +25,11 @@ class MoviesBloc {
   }
 
   Future<void> loadMovies(int page) async {
-    _addToStream(await getMoviesFromPageUseCase(page));
+    (await getMoviesFromPageUseCase(page)).fold((failure) {
+      print(failure.message);
+    }, (movies) {
+      _addToStream(movies);
+    }); 
   }
 
   void _addToStream(List<Movie> movies) {

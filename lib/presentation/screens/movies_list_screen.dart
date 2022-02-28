@@ -29,7 +29,13 @@ class MoviesListScreeen extends StatelessWidget {
               return StreamBuilder<List<Movie>>(
                 stream: _moviesBloc.stream,
                 builder: ((context, snapshot) {
-                  List<Movie> movies = snapshot.data ?? [];
+                  List<Movie>? movies = snapshot.data;
+
+                  if (movies == null || movies.isEmpty) {
+                    return const Center(
+                      child: Text('No movies'),
+                    );
+                  }
 
                   return ListView.builder(
                     itemCount: movies.length,

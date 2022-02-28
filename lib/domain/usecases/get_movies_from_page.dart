@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:movies_list/core/failure.dart';
 import 'package:movies_list/domain/entities/movie.dart';
 import 'package:movies_list/domain/repositories/movies_repository.dart';
 
@@ -6,11 +8,11 @@ class GetMoviesFromPageUseCase {
 
   GetMoviesFromPageUseCase({required this.repository});
   
-  Future<List<Movie>> call(int page) async {
+  Future<Either<Failure, List<Movie>>> call(int page) async {
     try {
-      return await repository.getMoviesFromPage(page);
+      return Right(await repository.getMoviesFromPage(page));
     } catch(exception) {
-      return [];
+      return Left(Failure(message: exception.toString()));
     }
   }
 }

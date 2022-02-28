@@ -28,8 +28,16 @@ class MovieScreen extends StatelessWidget {
         return StreamBuilder<Movie>(
             stream: movieBloc.stream,
             builder: ((context, snapshot) {
+              final _movie = snapshot.data;
 
-              final _movie = snapshot.data ?? Movie(title: '', overview: '', releaseDate: DateTime.now(), genres: [], posterPath: '', voteAverage: 0.0, runtime: 0);
+              if (_movie == null) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Not found'),
+                  ),
+                  body: const Center(child: Text('Faild loading movie')),
+                );
+              }
 
               return Scaffold(
                 appBar: AppBar(title: Text(_movie.title)),
@@ -45,7 +53,8 @@ class MovieScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5.0),
-                                  image: DecorationImage(fit: BoxFit.cover, image: CachedNetworkImageProvider(_movie.posterPath))),
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover, image: CachedNetworkImageProvider(_movie.posterPath))),
                             ),
                           ),
                           Expanded(
