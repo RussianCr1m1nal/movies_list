@@ -1,8 +1,11 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:movies_list/core/serializer.dart';
 import 'package:movies_list/locator.dart';
 import 'package:movies_list/presentation/routes/route_generator.dart';
 
 void main() {
+  driftRuntimeOptions.defaultSerializer = MoviesSerializer();
   setup();
   runApp(const MoviesApp());
 }

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:movies_list/data/movies_data_source.dart';
 import 'package:http/http.dart' as http;
+import 'package:movies_list/data/movies_remote_data_source.dart';
 
-class MoviesDataSourceTMDB extends MoviesDataSource {
+class MoviesDataSourceTMDB extends MoviesRemoteDataSource {
   final String _apiKey;
 
   MoviesDataSourceTMDB(this._apiKey);
@@ -44,7 +44,7 @@ class MoviesDataSourceTMDB extends MoviesDataSource {
         case 'poster_path':
           return MapEntry(key, 'https://image.tmdb.org/t/p/original' + value);
         case 'genres':
-          return MapEntry(key, List<String>.from(value.map((genre) => genre['name'] as String).toList()));       
+          return MapEntry(key, List<String>.from(value.map((genre) => genre['name'] as String).toList()));
         default:
           return MapEntry(key, value);
       }

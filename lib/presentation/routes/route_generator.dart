@@ -10,7 +10,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case MoviesListScreeen.routeName:
-        return MaterialPageRoute(builder: (_) => MoviesListScreeen());
+        return MaterialPageRoute(builder: (_) => const MoviesListScreeen());
       case MovieScreen.routeName:
         return MaterialPageRoute(builder: (_) => MovieScreen(movie: arguments as Movie));
       default:
