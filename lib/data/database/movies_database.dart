@@ -36,8 +36,8 @@ class MoviesDataBase extends _$MoviesDataBase {
   }
 
   Future<List<String>> getMoviesGenres(Movie movie) async {
-    List<MovieGenre> movieGeners = await (select(moviesGenres)..where((table) => table.id.equals(movie.id))).get();
-    return (await (select(genres)..where((table) => table.id.isIn(movieGeners.map((e) => e.id)))).get())
+    List<MovieGenre> movieGeners = await (select(moviesGenres)..where((table) => table.movie.equals(movie.id))).get();
+    return (await (select(genres)..where((table) => table.id.isIn(movieGeners.map((e) => e.genre)))).get())
         .map((e) => e.name)
         .toList();
   }
@@ -75,7 +75,10 @@ class MoviesDataBase extends _$MoviesDataBase {
   }
 
   Future<List<Movie>> getMoviesFromPage(int page) async {
-    return await (select(movies)..where((table) => table.page.equals(page))).get();
+    return await (select(movies)
+          ..where((table) => table.page.equals(page))
+          ..orderBy([(table) => OrderingTerm.desc(table.id)]))
+        .get();
   }
 
   Future<int> insertMovie(MoviesCompanion companion) async {
@@ -87,7 +90,8 @@ class MoviesDataBase extends _$MoviesDataBase {
   }
 
   Future<int> insertMovieGenre(movieId, genreId) async {
-    return await into(moviesGenres).insert(MoviesGenresCompanion(movie: Value(movieId), genre: Value(genreId)));
+    return await into(moviesGenres)
+        .insert(MoviesGenresCompanion(movie: Value(movieId), genre: Value(genreId)), mode: InsertMode.replace);
   }
 }
 
