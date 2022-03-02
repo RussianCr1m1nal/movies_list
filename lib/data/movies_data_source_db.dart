@@ -8,22 +8,16 @@ class MoviesDataSourceDB extends MoviesLocalDataSource {
 
   @override
   Future<List<Map<String, dynamic>>> getMoviesFromPage(int page) async {
-    List<Movie> movies = await dataBase.getMoviesFromPage(page);
-
-    List<Map<String, dynamic>> moviesList = [];
-
-    for (Movie movie in movies) {
-      Map<String, dynamic> movieMap = movie.toJson();
-      List<String> genres = await dataBase.getMoviesGenres(movie);
-      movieMap.putIfAbsent('genres', () => genres);
-      moviesList.add(movieMap);
-    }
-
-    return moviesList;
+    return (await dataBase.moviesDao.getMoviesFromPageWithGenres(page)).map((movieExpand) {
+      Map<String, dynamic> movieMap = movieExpand.movie.toJson();
+      movieMap.putIfAbsent(
+          'genres', () => movieExpand.genres == null ? [] : movieExpand.genres!.map((genre) => genre.name).toList());
+      return movieMap;
+    }).toList();
   }
 
   @override
   Future<void> updateMoviesOnPage(int page, List<Map<String, dynamic>> movies) async {
-    await dataBase.updateMoviesOnPage(page, movies);
+    await dataBase.moviesDao.updateMoviesOnPage(page, movies);
   }
 }

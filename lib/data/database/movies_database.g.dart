@@ -800,9 +800,33 @@ abstract class _$MoviesDataBase extends GeneratedDatabase {
   late final $MoviesTable movies = $MoviesTable(this);
   late final $GenresTable genres = $GenresTable(this);
   late final $MoviesGenresTable moviesGenres = $MoviesGenresTable(this);
+  late final MoviesDao moviesDao = MoviesDao(this as MoviesDataBase);
+  late final GenresDao genresDao = GenresDao(this as MoviesDataBase);
+  late final MoviesGenresDao moviesGenresDao =
+      MoviesGenresDao(this as MoviesDataBase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [movies, genres, moviesGenres];
+}
+
+// **************************************************************************
+// DaoGenerator
+// **************************************************************************
+
+mixin _$MoviesDaoMixin on DatabaseAccessor<MoviesDataBase> {
+  $MoviesTable get movies => attachedDatabase.movies;
+  $GenresTable get genres => attachedDatabase.genres;
+  $MoviesGenresTable get moviesGenres => attachedDatabase.moviesGenres;
+}
+mixin _$GenresDaoMixin on DatabaseAccessor<MoviesDataBase> {
+  $MoviesTable get movies => attachedDatabase.movies;
+  $GenresTable get genres => attachedDatabase.genres;
+  $MoviesGenresTable get moviesGenres => attachedDatabase.moviesGenres;
+}
+mixin _$MoviesGenresDaoMixin on DatabaseAccessor<MoviesDataBase> {
+  $MoviesTable get movies => attachedDatabase.movies;
+  $GenresTable get genres => attachedDatabase.genres;
+  $MoviesGenresTable get moviesGenres => attachedDatabase.moviesGenres;
 }
