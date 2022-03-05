@@ -12,11 +12,9 @@ class MoviesRepositoryDB extends MoviesRepository {
   final MoviesRemoteDataSource remoteDataSource;
 
   final BehaviorSubject<List<Movie>> _moviesStream = BehaviorSubject<List<Movie>>.seeded([]);
-  late StreamSubscription moviesSubscription;
+  StreamSubscription? moviesSubscription;
 
-  MoviesRepositoryDB({required this.localDataSource, required this.remoteDataSource}) {
-    _watchMovies();
-  }
+  MoviesRepositoryDB({required this.localDataSource, required this.remoteDataSource});
 
   @override
   Future<List<Movie>> getMoviesFromPage(int page) async {
@@ -39,19 +37,10 @@ class MoviesRepositoryDB extends MoviesRepository {
   }
 
   @override
-  Stream<List<Movie>> watchMovies() {
-    return _moviesStream.stream;
-  }
-
-  Future<void> _updateFromRemote(int page) async {
-    List<Map<String, dynamic>> moviesList = await remoteDataSource.getMoviesFromPage(page);
-    await localDataSource.updateMoviesOnPage(page, moviesList);
-  }
-
-  void _watchMovies() {
-    // moviesSubscription.cancel();
+  Stream<List<Movie>> watchMovies(int page) {
+    moviesSubscription?.cancel();
     moviesSubscription = localDataSource
-        .watchMovies()
+        .watchMovies(page)
         .map((movies) => movies.map((expand) {
               return Movie(
                   title: expand.movie.title,
@@ -67,10 +56,17 @@ class MoviesRepositoryDB extends MoviesRepository {
         .listen((moviesList) {
       _moviesStream.add(moviesList);
     });
+
+    return _moviesStream.stream;
+  }
+
+  Future<void> _updateFromRemote(int page) async {
+    List<Map<String, dynamic>> moviesList = await remoteDataSource.getMoviesFromPage(page);
+    await localDataSource.updateMoviesOnPage(page, moviesList);
   }
 
   void dispose() {
-    moviesSubscription.cancel();
+    moviesSubscription?.cancel();
     _moviesStream.close();
   }
 }

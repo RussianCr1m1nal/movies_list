@@ -12,38 +12,28 @@ class MoviesBloc {
   final WatchMoviesUseCase watchMoviesUseCase;
   final UpdateMoviesOnPageUseCase updateMoviesOnPageUseCase;
 
-  final _moviesSubject = BehaviorSubject<List<Movie>>.seeded([]);
-  late StreamSubscription _moviesSubscription;
-
   final _moviesOnPageSubject = BehaviorSubject<List<Movie>>.seeded([]);
+  StreamSubscription? _moviesSubscription;
+
   Stream<List<Movie>> get stream => _moviesOnPageSubject.stream;
+  
+  final scrollController = ScrollController();
 
   int currentPage = 1;
-
-  final pageController = PageController();
 
   MoviesBloc(
       {required this.getMoviesFromPageUseCase,
       required this.watchMoviesUseCase,
       required this.updateMoviesOnPageUseCase}) {
-    _watchMovies();
-  }
-
-  Future<void> _watchMovies() async {
-    (await watchMoviesUseCase()).fold((failure) {
-      print(failure.message);
-    }, (moviesStream) {
-      // _moviesSubscription.cancel();
-      _moviesSubscription = moviesStream.listen((movies) {
-        _moviesSubject.add(movies);
-      });
-      loadMovies(currentPage);
-    });
+    loadMovies(currentPage);
   }
 
   void nextPage() {
     loadMovies(++currentPage);
-    pageController.jumpToPage(currentPage - 1);
+
+    if (scrollController.positions.isNotEmpty) {
+      scrollController.jumpTo(0);
+    }
   }
 
   void previousPage() {
@@ -52,21 +42,23 @@ class MoviesBloc {
     }
 
     loadMovies(--currentPage);
-    pageController.jumpToPage(currentPage - 1);
+
+    if (scrollController.positions.isNotEmpty) {
+      scrollController.jumpTo(0);
+    }
   }
 
-  Future<void> loadMovies(int page) async {    
-    updateMoviesOnPageUseCase(page);
-
-    _moviesSubscription = _moviesSubject.listen((value) {
-      List<Movie> result = [];
-
-      value.where((element) => element.page == page).forEach((element) {
-        result.add(element);
+  Future<void> loadMovies(int page) async {
+    (await watchMoviesUseCase(page)).fold((failure) {
+      print(failure.message);
+    }, (moviesStream) {
+      _moviesSubscription?.cancel();
+      _moviesSubscription = moviesStream.listen((movies) {
+        _addToStream(movies);
       });
-
-      _addToStream(result);
     });
+
+    updateMoviesOnPageUseCase(page);
   }
 
   void _addToStream(List<Movie> movies) {
@@ -74,9 +66,8 @@ class MoviesBloc {
   }
 
   void dispose() {
-    _moviesSubscription.cancel();
-    _moviesSubject.close();
+    _moviesSubscription?.cancel();
     _moviesOnPageSubject.close();
-    pageController.dispose();
+    scrollController.dispose();
   }
 }

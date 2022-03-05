@@ -22,7 +22,7 @@ class MoviesDataSourceDB extends MoviesLocalDataSource {
   }
 
   @override
-  Stream<List<MovieExpand>> watchMovies() {
-    return dataBase.moviesDao.watchMovies();
+  Stream<List<MovieExpand>> watchMovies(int page) {
+    return dataBase.moviesDao.watchMovies(page);
   }
 }

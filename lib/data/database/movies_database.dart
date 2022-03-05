@@ -38,11 +38,13 @@ class MoviesDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesDaoMixin {
 
   MoviesDao(this.dataBase) : super(dataBase);
 
-  Stream<List<MovieExpand>> watchMovies() {
+  Stream<List<MovieExpand>> watchMovies(int page) {
     final rows = (select(movies).join([
       leftOuterJoin(moviesGenres, moviesGenres.movie.equalsExp(movies.id)),
       leftOuterJoin(genres, genres.id.equalsExp(moviesGenres.genre)),
-    ])).watch();
+    ])
+          ..where(movies.page.equals(page)))
+        .watch();
 
     return rows.map((element) {
       return element
@@ -166,7 +168,7 @@ class MoviesGenresDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesGenr
 
   Future<void> deleteReletedRows(int movieId) async {
     final rows = await (select(moviesGenres)..where((table) => table.movie.equals(movieId))).get();
-    
+
     for (MovieGenre row in rows) {
       await (delete(moviesGenres)..where((table) => table.id.equals(row.id))).go();
     }

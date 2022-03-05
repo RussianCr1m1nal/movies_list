@@ -37,25 +37,21 @@ class MoviesListScreeen extends StatelessWidget {
 
                 return Scaffold(
                   body: SafeArea(
-                    child: PageView.builder(
-                      controller: _moviesBloc.pageController,
-                      // onPageChanged: _moviesBloc.onPageChanged,
-                      physics: const NeverScrollableScrollPhysics(),                      
-                      itemCount: _moviesBloc.currentPage + 1,
-                      itemBuilder: (context, index) {
-                        if (movies == null || movies.isEmpty) {
-                          return const Center(
-                            child: Text('No movies'),
-                          );
-                        }
-                        return ListView.builder(
-                          itemCount: movies.length,
-                          itemBuilder: (context, index) {
-                            return MovieCard(movie: movies[index]);
-                          },
+                    child: Builder(builder: (context) {
+                      if (movies == null || movies.isEmpty) {
+                        return const Center(
+                          child: Text('No movies'),
                         );
-                      },
-                    ),
+                      }
+
+                      return ListView.builder(
+                        controller: _moviesBloc.scrollController,
+                        itemCount: movies.length,
+                        itemBuilder: (context, index) {
+                          return MovieCard(movie: movies[index]);
+                        },
+                      );
+                    }),
                   ),
                   bottomNavigationBar: BottomAppBar(
                     child: Row(

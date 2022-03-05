@@ -8,9 +8,9 @@ class WatchMoviesUseCase {
 
   WatchMoviesUseCase({required this.repository});
 
-  Future<Either<Failure, Stream<List<Movie>>>> call() async {
+  Future<Either<Failure, Stream<List<Movie>>>> call(int page) async {
     try {
-      return Right(repository.watchMovies());
+      return Right(repository.watchMovies(page));
     } catch (exception) {
       return Left(Failure(message: exception.toString()));
     }

@@ -15,7 +15,7 @@ class MoviesRepositoryTMDB extends MoviesRepository {
   }
 
   @override
-  Stream<List<Movie>> watchMovies() {   
+  Stream<List<Movie>> watchMovies(int page) {   
     throw UnimplementedError();
   }
 
