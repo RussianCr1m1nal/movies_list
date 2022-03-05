@@ -38,8 +38,33 @@ class MoviesDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesDaoMixin {
 
   MoviesDao(this.dataBase) : super(dataBase);
 
+  Stream<List<MovieExpand>> watchMovies() {
+    final rows = (select(movies).join([
+      leftOuterJoin(moviesGenres, moviesGenres.movie.equalsExp(movies.id)),
+      leftOuterJoin(genres, genres.id.equalsExp(moviesGenres.genre)),
+    ])).watch();
+
+    return rows.map((element) {
+      return element
+          .fold(<int, MovieExpand>{}, (Map<int, MovieExpand> previousValue, resultRow) {
+            final movie = resultRow.readTableOrNull(movies);
+            final genre = resultRow.readTableOrNull(genres);
+
+            previousValue.update(movie!.id, (value) {
+              return MovieExpand(movie: movie, genres: genre == null ? value.genres : [...?value.genres, genre]);
+            }, ifAbsent: () {
+              return MovieExpand(movie: movie, genres: genre == null ? [] : [genre]);
+            });
+
+            return previousValue;
+          })
+          .values
+          .toList();
+    });
+  }
+
   Future<List<MovieExpand>> getMoviesFromPageWithGenres(int page) async {
-    final rows = await (select(movies).join([      
+    final rows = await (select(movies).join([
       leftOuterJoin(moviesGenres, moviesGenres.movie.equalsExp(movies.id)),
       leftOuterJoin(genres, genres.id.equalsExp(moviesGenres.genre)),
     ])
@@ -76,15 +101,13 @@ class MoviesDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesDaoMixin {
   }
 
   Future<List<Movie>> getMoviesFromPage(int page) async {
-    return await (select(movies)
-          ..where((table) => table.page.equals(page))
-          ..orderBy([(table) => OrderingTerm.desc(table.id)]))
-        .get();
+    return await (select(movies)..where((table) => table.page.equals(page))).get();
   }
 
   Future<void> deleteMoviesFromPage(List<Movie> moviesOnPage) async {
     for (Movie movie in moviesOnPage) {
       await deleteMovie(movie.id);
+      await dataBase.moviesGenresDao.deleteReletedRows(movie.id);
     }
   }
 
@@ -103,7 +126,7 @@ class MoviesDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesDaoMixin {
   }
 
   Future<int> insertMovie(MoviesCompanion companion) async {
-    return await into(movies).insert(companion);
+    return await into(movies).insert(companion, mode: InsertMode.replace);
   }
 }
 
@@ -126,7 +149,7 @@ class GenresDao extends DatabaseAccessor<MoviesDataBase> with _$GenresDaoMixin {
   }
 
   Future<int> insertGenre(GenresCompanion companion) async {
-    return await into(genres).insert(companion);
+    return await into(genres).insert(companion, mode: InsertMode.replace);
   }
 }
 
@@ -141,10 +164,11 @@ class MoviesGenresDao extends DatabaseAccessor<MoviesDataBase> with _$MoviesGenr
         .insert(MoviesGenresCompanion(movie: Value(movieId), genre: Value(genreId)), mode: InsertMode.replace);
   }
 
-  Future<List<String>> getMoviesGenres(Movie movie) async {
-    List<MovieGenre> movieGeners = await (select(moviesGenres)..where((table) => table.movie.equals(movie.id))).get();
-    return (await (select(genres)..where((table) => table.id.isIn(movieGeners.map((e) => e.genre)))).get())
-        .map((e) => e.name)
-        .toList();
+  Future<void> deleteReletedRows(int movieId) async {
+    final rows = await (select(moviesGenres)..where((table) => table.movie.equals(movieId))).get();
+    
+    for (MovieGenre row in rows) {
+      await (delete(moviesGenres)..where((table) => table.id.equals(row.id))).go();
+    }
   }
 }

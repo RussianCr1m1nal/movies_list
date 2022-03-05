@@ -28,6 +28,9 @@ class Movie {
   @JsonKey(name: 'id')
   final int id;
 
+  @JsonKey(name: 'page')
+  final int page;
+
   Movie(
       {required this.title,
       required this.overview,
@@ -36,7 +39,8 @@ class Movie {
       required this.posterPath,
       required this.voteAverage,
       required this.runtime,
-      required this.id});
+      required this.id,
+      required this.page});
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 }

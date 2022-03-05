@@ -20,4 +20,9 @@ class MoviesDataSourceDB extends MoviesLocalDataSource {
   Future<void> updateMoviesOnPage(int page, List<Map<String, dynamic>> movies) async {
     await dataBase.moviesDao.updateMoviesOnPage(page, movies);
   }
+
+  @override
+  Stream<List<MovieExpand>> watchMovies() {
+    return dataBase.moviesDao.watchMovies();
+  }
 }

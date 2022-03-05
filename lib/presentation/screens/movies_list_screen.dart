@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:movies_list/domain/entities/movie.dart';
 import 'package:movies_list/domain/usecases/get_movies_from_page.dart';
+import 'package:movies_list/domain/usecases/update_movies_usecase.dart';
+import 'package:movies_list/domain/usecases/watch_movies_usecase.dart';
 import 'package:movies_list/presentation/bloc/movies_bloc.dart';
 import 'package:movies_list/presentation/widgets/movie_card.dart';
 import 'package:provider/provider.dart';
@@ -16,39 +18,58 @@ class MoviesListScreeen extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<MoviesBloc>(
-          create: (_) => MoviesBloc(getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>()),
+          create: (_) => MoviesBloc(
+            getMoviesFromPageUseCase: GetIt.I<GetMoviesFromPageUseCase>(),
+            watchMoviesUseCase: GetIt.I<WatchMoviesUseCase>(),
+            updateMoviesOnPageUseCase: GetIt.I<UpdateMoviesOnPageUseCase>(),
+          ),
           dispose: (context, moviesBloc) {
             moviesBloc.dispose();
           },
         ),
       ],
-      child: Scaffold(
-        body: SafeArea(
-          child: Consumer<MoviesBloc>(
-            builder: ((context, _moviesBloc, child) {
-              return StreamBuilder<List<Movie>>(
-                stream: _moviesBloc.stream,
-                builder: ((context, snapshot) {
-                  List<Movie>? movies = snapshot.data;
+      child: Consumer<MoviesBloc>(
+        builder: (context, _moviesBloc, child) {
+          return StreamBuilder<List<Movie>>(
+              stream: _moviesBloc.stream,
+              builder: (context, snapshot) {
+                List<Movie>? movies = snapshot.data;
 
-                  if (movies == null || movies.isEmpty) {
-                    return const Center(
-                      child: Text('No movies'),
-                    );
-                  }
-
-                  return ListView.builder(
-                    itemCount: movies.length,
-                    itemBuilder: (context, index) {
-                      return MovieCard(movie: movies[index]);
-                    },
-                    controller: _moviesBloc.scrollController,
-                  );
-                }),
-              );
-            }),
-          ),
-        ),
+                return Scaffold(
+                  body: SafeArea(
+                    child: PageView.builder(
+                      controller: _moviesBloc.pageController,
+                      // onPageChanged: _moviesBloc.onPageChanged,
+                      physics: const NeverScrollableScrollPhysics(),                      
+                      itemCount: _moviesBloc.currentPage + 1,
+                      itemBuilder: (context, index) {
+                        if (movies == null || movies.isEmpty) {
+                          return const Center(
+                            child: Text('No movies'),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: movies.length,
+                          itemBuilder: (context, index) {
+                            return MovieCard(movie: movies[index]);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  bottomNavigationBar: BottomAppBar(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(onPressed: _moviesBloc.previousPage, icon: const Icon(Icons.navigate_before)),
+                        Text(_moviesBloc.currentPage.toString()),
+                        IconButton(onPressed: _moviesBloc.nextPage, icon: const Icon(Icons.navigate_next)),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        },
       ),
     );
   }

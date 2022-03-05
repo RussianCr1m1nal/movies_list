@@ -5,6 +5,7 @@ import 'package:movies_list/locator.dart';
 import 'package:movies_list/presentation/routes/route_generator.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   driftRuntimeOptions.defaultSerializer = MoviesSerializer();
   setup();
   runApp(const MoviesApp());

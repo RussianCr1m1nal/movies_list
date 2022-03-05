@@ -79,7 +79,11 @@ class MovieScreen extends StatelessWidget {
                                     onRatingUpdate: (rating) {},
                                   ),
                                   MovieInfo(title: _movie.title, subtitle: _movie.overview),
-                                  MovieInfo(title: 'Release', subtitle: _movie.releaseDate.toString().substring(0, 10)),
+                                  MovieInfo(
+                                      title: 'Release',
+                                      subtitle: _movie.releaseDate == null
+                                          ? ''
+                                          : _movie.releaseDate.toString().substring(0, 10)),
                                   MovieInfo(
                                       title: 'Genres',
                                       subtitle: _movie.genres.toString().replaceAll(RegExp(r"[\[\]]"), '')),

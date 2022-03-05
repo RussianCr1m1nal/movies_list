@@ -13,4 +13,14 @@ class MoviesRepositoryTMDB extends MoviesRepository {
 
     return moviesData.map((elemet) => Movie.fromJson(elemet)).toList();
   }
+
+  @override
+  Stream<List<Movie>> watchMovies() {   
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateMoviesOnPage(int page) {    
+    throw UnimplementedError();
+  }
 }

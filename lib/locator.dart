@@ -7,6 +7,8 @@ import 'package:movies_list/data/movies_remote_data_source.dart';
 import 'package:movies_list/domain/repositories/movies_repository.dart';
 import 'package:movies_list/domain/repositories/movies_repository_db.dart';
 import 'package:movies_list/domain/usecases/get_movies_from_page.dart';
+import 'package:movies_list/domain/usecases/update_movies_usecase.dart';
+import 'package:movies_list/domain/usecases/watch_movies_usecase.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,4 +22,6 @@ void setup() {
       localDataSource: GetIt.I<MoviesLocalDataSource>(), remoteDataSource: GetIt.I<MoviesRemoteDataSource>()));
 
   getIt.registerSingleton<GetMoviesFromPageUseCase>(GetMoviesFromPageUseCase(repository: GetIt.I<MoviesRepository>()));
+  getIt.registerSingleton<WatchMoviesUseCase>(WatchMoviesUseCase(repository: GetIt.I<MoviesRepository>()));
+  getIt.registerSingleton<UpdateMoviesOnPageUseCase>(UpdateMoviesOnPageUseCase(repository: GetIt.I<MoviesRepository>()));
 }

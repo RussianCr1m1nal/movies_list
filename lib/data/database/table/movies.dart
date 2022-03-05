@@ -19,4 +19,7 @@ class Movies extends Table {
 
   @JsonKey('release_date')
   DateTimeColumn get releaseDate => dateTime().named('release_date').nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }

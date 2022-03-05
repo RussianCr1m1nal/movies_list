@@ -8,4 +8,7 @@ class MoviesGenres extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get movie => integer().references(Movies, #id)();
   IntColumn get genre => integer().references(Genres, #id)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
