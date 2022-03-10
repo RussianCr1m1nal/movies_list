@@ -43,58 +43,51 @@ class MovieScreen extends StatelessWidget {
                 appBar: AppBar(title: Text(_movie.title)),
                 body: CustomScrollView(
                   slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Flex(
-                        direction: Axis.vertical,
+                    SliverToBoxAdapter(
+                      child: Column(
                         children: [
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover, image: CachedNetworkImageProvider(_movie.posterPath))),
-                            ),
+                          Container(
+                            height: 250,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                image: DecorationImage(
+                                    fit: BoxFit.cover, image: CachedNetworkImageProvider(_movie.posterPath))),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RatingBar(
-                                    ignoreGestures: true,
-                                    initialRating: _movie.voteAverage / 2,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    ratingWidget: RatingWidget(
-                                      full: const Icon(Icons.star),
-                                      half: const Icon(Icons.star_half_outlined),
-                                      empty: const Icon(Icons.star_border),
-                                    ),
-                                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                    onRatingUpdate: (rating) {},
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RatingBar(
+                                  ignoreGestures: true,
+                                  initialRating: _movie.voteAverage / 2,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  ratingWidget: RatingWidget(
+                                    full: const Icon(Icons.star),
+                                    half: const Icon(Icons.star_half_outlined),
+                                    empty: const Icon(Icons.star_border),
                                   ),
-                                  MovieInfo(title: _movie.title, subtitle: _movie.overview),
-                                  MovieInfo(
-                                      title: 'Release',
-                                      subtitle: _movie.releaseDate == null
-                                          ? ''
-                                          : _movie.releaseDate.toString().substring(0, 10)),
-                                  MovieInfo(
-                                      title: 'Genres',
-                                      subtitle: _movie.genres.toString().replaceAll(RegExp(r"[\[\]]"), '')),
-                                  MovieInfo(title: 'Runtime', subtitle: _movie.runtime.toString() + ' min'),
-                                ],
-                              ),
+                                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  onRatingUpdate: (rating) {},
+                                ),
+                                MovieInfo(title: _movie.title, subtitle: _movie.overview),
+                                MovieInfo(
+                                    title: 'Release',
+                                    subtitle: _movie.releaseDate == null
+                                        ? ''
+                                        : _movie.releaseDate.toString().substring(0, 10)),
+                                MovieInfo(
+                                    title: 'Genres',
+                                    subtitle: _movie.genres.toString().replaceAll(RegExp(r"[\[\]]"), '')),
+                                MovieInfo(title: 'Runtime', subtitle: _movie.runtime.toString() + ' min'),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
